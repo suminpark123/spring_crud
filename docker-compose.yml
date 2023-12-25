@@ -9,10 +9,10 @@ services:
       - POSTGRES_USER=sumin
       - POSTGRES_PASSWORD=suminpassword
       - POSTGRES_DB=sumindb
-  smmysql :
-    container_name: mysql
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=suminpassword
+#  smmysql :
+#    container_name: mysql
+#    image: mysql:8.0
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=suminpassword
