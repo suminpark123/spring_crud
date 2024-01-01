@@ -19,3 +19,5 @@ public class PostDto {
     @Size(min = 10,message = "post content should have at least 10 characters")
     private String content;
 }
+
+
