@@ -30,7 +30,7 @@ public class PostController {
     }
     //게시물 불러오기(전체)
     @GetMapping("all")
-    public ResponseEntity<List<Post>> getAllPosts(){
+    public ResponseEntity<List<PostDto>> getAllPosts(){
 
         return new ResponseEntity<>(postService.getAllPosts(),HttpStatus.OK);
     }

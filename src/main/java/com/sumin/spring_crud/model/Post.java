@@ -27,4 +27,9 @@ public class Post {
 
     @Column(name = "content",nullable = false)
     private  String content;
+
+    //다대일
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -36,9 +37,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        return categories;
+        //return categories.stream().map((category) -> mapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+        return categories.stream().map((category) -> mapper.map(category, CategoryDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -46,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category","id",id));
 
         return mapper.map(category, CategoryDto.class);
+
     }
 
     @Override

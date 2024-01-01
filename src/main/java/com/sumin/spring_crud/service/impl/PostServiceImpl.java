@@ -2,30 +2,42 @@ package com.sumin.spring_crud.service.impl;
 
 
 import com.sumin.spring_crud.exception.ResourceNotFoundException;
+import com.sumin.spring_crud.model.Category;
 import com.sumin.spring_crud.model.Post;
 import com.sumin.spring_crud.payload.PostDto;
+import com.sumin.spring_crud.repository.CategoryRepository;
 import com.sumin.spring_crud.repository.PostRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import com.sumin.spring_crud.service.PostService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService{
 
     private PostRepository postRepository;
 
+    private CategoryRepository categoryRepository;
+
     private ModelMapper mapper;
 
-    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper){
+    public PostServiceImpl(PostRepository postRepository, CategoryRepository categoryRepository, ModelMapper mapper){
 
+        this.categoryRepository = categoryRepository;
         this.postRepository = postRepository;
         this.mapper = mapper;
     }
     @Override
     public PostDto createPost(PostDto postDto) {
+        Category category = categoryRepository
+                .findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId()));
+
+
         Post post = mapToEntity(postDto);
+        post.setCategory(category);
         Post newPost = postRepository.save(post);
 
         PostDto postResponse = mapToDTO(newPost);
@@ -34,9 +46,11 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public List<Post> getAllPosts() {
+    public List<PostDto> getAllPosts() {
         List<Post> posts= postRepository.findAll();
-        return posts;
+        return posts.stream().map((post) -> mapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+
     }
 
     @Override

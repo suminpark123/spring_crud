@@ -34,15 +34,15 @@ public class CategoryController {
 
     //카테고리 불러오기(전체)
     @GetMapping("all")
-    public ResponseEntity<List<Category>> getAllCategories(){
+    public ResponseEntity<List<CategoryDto>> getAllCategories(){
 
-        return  new ResponseEntity<>(categoryService.getAllCategories(),HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getAllCategories(),HttpStatus.OK);
     }
 
     //카테고리 불러오기(상세)
     @GetMapping("{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable(name = "id") long id){
-        return  new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.getCategoryById(id),HttpStatus.OK);
 
 
     }
