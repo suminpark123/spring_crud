@@ -5,9 +5,14 @@ import com.sumin.spring_crud.exception.ResourceNotFoundException;
 import com.sumin.spring_crud.model.Category;
 import com.sumin.spring_crud.model.Post;
 import com.sumin.spring_crud.payload.PostDto;
+import com.sumin.spring_crud.payload.PostResponse;
 import com.sumin.spring_crud.repository.CategoryRepository;
 import com.sumin.spring_crud.repository.PostRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.sumin.spring_crud.service.PostService;
 
@@ -44,14 +49,38 @@ public class PostServiceImpl implements PostService{
         return postResponse;
     }
 
-
     @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> posts= postRepository.findAll();
-        return posts.stream().map((post) -> mapper.map(post, PostDto.class))
-                .collect(Collectors.toList());
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        List<Post> listOfPosts = posts.getContent();
+
+        List<PostDto> contents = listOfPosts.stream().map((post) -> mapToDTO(post)).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContents(contents);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(postResponse.getTotalPages());
+        postResponse.setTotalElements(postResponse.getTotalElements());
+        postResponse.setTotalPages(postResponse.getTotalPages());
+        postResponse.setLast(posts.isLast());
+
+        return postResponse;
     }
+
+
+//    @Override
+//    public List<PostDto> getAllPosts() {
+//        List<Post> posts= postRepository.findAll();
+//        return posts.stream().map((post) -> mapper.map(post, PostDto.class))
+//                .collect(Collectors.toList());
+//
+//    }
 
     @Override
     public PostDto getPostById(long id) {

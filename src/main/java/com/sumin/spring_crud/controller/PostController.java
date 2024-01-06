@@ -3,7 +3,9 @@ package com.sumin.spring_crud.controller;
 
 import com.sumin.spring_crud.model.Post;
 import com.sumin.spring_crud.payload.PostDto;
+import com.sumin.spring_crud.payload.PostResponse;
 import com.sumin.spring_crud.service.PostService;
+import com.sumin.spring_crud.utils.AppConstants;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +32,15 @@ public class PostController {
     }
     //게시물 불러오기(전체)
     @GetMapping("all")
-    public ResponseEntity<List<PostDto>> getAllPosts(){
+    public PostResponse getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NO, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ){
 
-        return new ResponseEntity<>(postService.getAllPosts(),HttpStatus.OK);
+        //return new ResponseEntity<>(postService.getAllPosts(pageNo, pageSize, sortBy, sortDir),HttpStatus.OK);
+        return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
     //게시물 불러오기(상세)
     @GetMapping("{id}")
