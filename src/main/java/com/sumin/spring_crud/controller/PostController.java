@@ -49,7 +49,6 @@ public class PostController {
 
     }
     //게시물 수정
-    @PutMapping("{id}")
     public ResponseEntity<PostDto> updatePostById(
             @PathVariable(name = "id") long id,
             @Valid @RequestBody PostDto postDto
